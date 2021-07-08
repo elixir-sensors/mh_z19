@@ -4,7 +4,7 @@ A Elixir library to retrieve CO2 concentration value from MH-Z19 sensor.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
+The package can be installed
 by adding `mh_z19` to your list of dependencies in `mix.exs`:
 
 ```elixir
