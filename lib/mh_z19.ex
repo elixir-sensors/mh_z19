@@ -1,7 +1,5 @@
 defmodule MhZ19 do
-  @moduledoc """
-  Documentation for `MhZ19`.
-  """
+  @moduledoc File.read!("./README.md") |> String.replace("^# .+\n\n", "")
 
   use GenServer
   alias Circuits.UART
@@ -46,30 +44,30 @@ defmodule MhZ19 do
 
   @impl GenServer
   def handle_call(:measure, _from, state) do
-    {:reply, read_co2_concentration(state), state}
+    {:reply, retrieve_co2_concentration(state), state}
   end
 
-  defp read_co2_concentration(state) do
+  defp retrieve_co2_concentration(state) do
     :ok = UART.write(state.uart, @commands[:co2_concentration])
 
     UART.read(state.uart)
     |> handle_data(state)
   end
 
-  defp handle_data({:ok, <<0xFF, 0x86, high, low, _, _, _, _>>}, state) do
+  defp handle_data({:ok, <<0xFF, 0x86, high, low, _, _, _, _>>}, _state) do
     data = high * 256 + low
-    {:reply, {:ok, data}, state}
+    {:ok, %{co2_concentration: data}}
   end
 
-  defp handle_data({:error, reason}, state) do
-    {:reply, {:error, reason}, state}
+  defp handle_data({:error, reason}, _state) do
+    {:error, reason}
   end
 
-  defp handle_data({:ok, <<>>}, state) do
-    {:reply, {:error, :timeout}, state}
+  defp handle_data({:ok, <<>>}, _state) do
+    {:error, :timeout}
   end
 
   defp handle_data(_, state) do
-    read_co2_concentration(state)
+    retrieve_co2_concentration(state)
   end
 end
