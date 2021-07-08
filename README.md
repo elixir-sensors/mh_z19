@@ -1,6 +1,6 @@
 # MhZ19 [![hex.pm version](https://img.shields.io/hexpm/v/mh_z19.svg)](https://hex.pm/packages/mh_z19)
 
-A Elixir library to retrieve CO<sub>2</sub> concentration from MH-Z19 sensor.
+A Elixir library to retrieve CO2 concentration value from MH-Z19 sensor.
 
 ## Installation
 
@@ -18,9 +18,9 @@ end
 ## Usage
 
 ```elixir
-iex(1)> {:ok, pid} = MhZ19.start_link
+iex> {:ok, pid} = MhZ19.start_link
 {:ok, #PID<0.1104.0>}
-iex(2)> {:ok, result} = MhZ19.measure(pid)
+iex> {:ok, result} = MhZ19.measure(pid)
 {:ok, %{co2_concentration: 650}}
 ```
 
@@ -32,4 +32,4 @@ iex(2)> {:ok, result} = MhZ19.measure(pid)
 
 ## Author
 
-Kentaro Kuribayashi &lt;kentarok@gmail.com&gt;
+Kentaro Kuribayashi

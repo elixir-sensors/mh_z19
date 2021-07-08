@@ -1,5 +1,5 @@
 defmodule MhZ19 do
-  @moduledoc File.read!("./README.md") |> String.replace("^# .+\n\n", "")
+  @moduledoc File.read!("./README.md") |> String.replace(~r/^# .+\n\n/, "")
 
   use GenServer
   alias Circuits.UART
@@ -9,13 +9,11 @@ defmodule MhZ19 do
   ]
 
   @doc """
-  Hello world.
+  Initializes a GenServer process with given `opts`.
 
-  ## Examples
+  ## Options
 
-      iex> MhZ19.hello()
-      :world
-
+  - `:tty` - (String) Set the name of the serial device. Defaults to `ttyAMA0`.
   """
   @impl GenServer
   def init(opts \\ []) do
@@ -33,11 +31,34 @@ defmodule MhZ19 do
     {:ok, %{uart: uart}}
   end
 
+  @doc """
+  Starts a GenServer process with given `opts`.
+
+  ## Options
+
+  - `:name` - (Atom) Set the name of the GenServer process. Defaults to `MhZ19`.
+
+  ## Examples
+
+  ```elixir
+  iex> {:ok, pid} = MhZ19.start_link
+  ```
+  """
   def start_link(opts \\ []) do
     name = opts[:name] || __MODULE__
     GenServer.start_link(__MODULE__, opts, name: name)
   end
 
+  @doc """
+  Retrieves the current CO2 concentration value.
+
+  ## Examples
+
+  ```elixir
+  iex> {:ok, result} = MhZ19.measure(pid)
+  {:ok, %{co2_concentration: 650}}
+  ```
+  """
   def measure(pid) do
     GenServer.call(pid, :measure)
   end
