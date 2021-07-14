@@ -8,13 +8,49 @@ defmodule MhZ19 do
     co2_concentration: <<0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79>>
   ]
 
-  @doc """
-  Initializes a GenServer process with given `opts`.
-
-  ## Options
-
-  - `:tty` - (String) Set the name of the serial device. Defaults to `ttyAMA0`.
+  @typedoc """
+  MhZ19 GenServer start_link options
+  * `:name` - a name for the GenServer (defaults to #{__MODULE__})
+  * `:tty` - name of the serial device (defaults to "ttyAMA0")
   """
+  @type options() :: [
+          name: GenServer.name(),
+          tty: binary
+        ]
+
+  @doc """
+  Starts a new GenServer process with given `opts`.
+
+  ## Examples
+
+  ```elixir
+  iex> {:ok, pid} = MhZ19.start_link
+  ```
+  """
+  @spec start_link(options()) :: GenServer.on_start()
+  def start_link(opts \\ []) do
+    name = opts[:name] || __MODULE__
+    GenServer.start_link(__MODULE__, opts, name: name)
+  end
+
+  @doc """
+  Measures the current CO2 concentration value.
+
+  ## Examples
+
+  ```elixir
+  iex> {:ok, result} = MhZ19.measure(pid)
+  {:ok,
+   %MhZ19.Measurement{
+     co2_concentration: 650
+   }}
+  ```
+  """
+  @spec measure(GenServer.server()) :: {:ok, struct} | {:error, any()}
+  def measure(pid) do
+    GenServer.call(pid, :measure)
+  end
+
   @impl GenServer
   def init(opts \\ []) do
     {:ok, uart} = UART.start_link()
@@ -31,38 +67,6 @@ defmodule MhZ19 do
     {:ok, %{uart: uart}}
   end
 
-  @doc """
-  Starts a GenServer process with given `opts`.
-
-  ## Options
-
-  - `:name` - (Atom) Set the name of the GenServer process. Defaults to `MhZ19`.
-
-  ## Examples
-
-  ```elixir
-  iex> {:ok, pid} = MhZ19.start_link
-  ```
-  """
-  def start_link(opts \\ []) do
-    name = opts[:name] || __MODULE__
-    GenServer.start_link(__MODULE__, opts, name: name)
-  end
-
-  @doc """
-  Retrieves the current CO2 concentration value.
-
-  ## Examples
-
-  ```elixir
-  iex> {:ok, result} = MhZ19.measure(pid)
-  {:ok, %{co2_concentration: 650}}
-  ```
-  """
-  def measure(pid) do
-    GenServer.call(pid, :measure)
-  end
-
   @impl GenServer
   def handle_call(:measure, _from, state) do
     {:reply, retrieve_co2_concentration(state), state}
@@ -77,7 +81,11 @@ defmodule MhZ19 do
 
   defp handle_data({:ok, <<0xFF, 0x86, high, low, _, _, _, _>>}, _state) do
     data = high * 256 + low
-    {:ok, %{co2_concentration: data}}
+
+    {:ok,
+     %MhZ19.Measurement{
+       co2_concentration: data
+     }}
   end
 
   defp handle_data({:error, reason}, _state) do
