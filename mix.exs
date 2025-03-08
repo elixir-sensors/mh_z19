@@ -1,18 +1,20 @@
 defmodule MhZ19.MixProject do
   use Mix.Project
 
+  @version "0.1.1"
+  @source_url "https://github.com/elixir-sensors/mh_z19"
+  @reuse_compliance_url "https://api.reuse.software/info/github.com/elixir-sensors/mh_z19"
+
   def project do
     [
       app: :mh_z19,
-      version: "0.1.1",
+      version: @version,
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      source_url: "https://github.com/kentaro/mh_z19_ex",
-      homepage_url: "https://github.com/kentaro/mh_z19_ex",
       description: description(),
       package: package(),
-      docs: docs(),
+      docs: docs()
     ]
   end
 
@@ -37,14 +39,29 @@ defmodule MhZ19.MixProject do
 
   defp package do
     [
-      licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/kentaro/mh_z19_ex"}
+      files: [
+        "lib",
+        "mix.exs",
+        "README.md",
+        "CHANGELOG*",
+        "LICENSES",
+        "NOTICE",
+        "REUSE.toml"
+      ],
+      licenses: ["Apache-2.0"],
+      links: %{
+        "GitHub" => @source_url,
+        "REUSE compliance" => @reuse_compliance_url
+      }
     ]
   end
 
   defp docs do
     [
+      extras: ["README.md"],
       main: "MhZ19",
+      source_ref: "v#{@version}",
+      source_url: @source_url
     ]
   end
 end
