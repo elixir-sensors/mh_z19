@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Kentaro Kuribayashi
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule MhZ19.Measurement do
   @moduledoc """
   One sensor measurement report

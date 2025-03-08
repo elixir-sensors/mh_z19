@@ -1,4 +1,9 @@
-# MhZ19 [![hex.pm version](https://img.shields.io/hexpm/v/mh_z19.svg)](https://hex.pm/packages/mh_z19)
+# MhZ19
+
+[![Hex version](https://img.shields.io/hexpm/v/mh_z19.svg "Hex version")](https://hex.pm/packages/mh_z19)
+[![API docs](https://img.shields.io/hexpm/v/mh_z19.svg?label=docs "API docs")](https://hexdocs.pm/mh_z19)
+[![CI](https://github.com/elixir-sensors/mh_z19/actions/workflows/ci.yml/badge.svg)](https://github.com/elixir-sensors/mh_z19/actions/workflows/ci.yml)
+[![REUSE status](https://api.reuse.software/badge/github.com/elixir-sensors/mh_z19)](https://api.reuse.software/info/github.com/elixir-sensors/mh_z19)
 
 A Elixir library to measure CO2 concentration value from MH-Z19 sensor.
 
